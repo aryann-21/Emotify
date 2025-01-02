@@ -1,4 +1,4 @@
-export const fetchPlaylists = async (emotion) => {
+const fetchPlaylists = async (emotion) => {
   try {
     const response = await fetch(`http://localhost:5000/api/playlists/${emotion}`);
     if (!response.ok) {
@@ -11,3 +11,5 @@ export const fetchPlaylists = async (emotion) => {
     return [];
   }
 };
+
+export { fetchPlaylists };
