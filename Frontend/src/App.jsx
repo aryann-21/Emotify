@@ -1,13 +1,16 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
-import PlaylistPage from './pages/PlaylistPage'; // If needed for other pages
+import PlaylistPage from './pages/PlaylistPage';
 
 function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/playlist" element={<PlaylistPage />} />
+        <Route path="/playlists" element={<PlaylistPage />} />
       </Routes>
     </Router>
   );

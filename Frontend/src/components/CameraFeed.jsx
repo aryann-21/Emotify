@@ -1,30 +1,28 @@
+import React, { useRef } from 'react';
 import Webcam from 'react-webcam';
-import { useState } from 'react';
-import EmotionDetector from './EmotionDetector';
 
 function CameraFeed({ onCapture }) {
-  const [image, setImage] = useState(null);
+  const webcamRef = useRef(null);
 
-  const handleCapture = (webcam) => {
-    const capturedImage = webcam.getScreenshot();
-    setImage(capturedImage);
-    onCapture(capturedImage); // Send image to parent
+  const handleCapture = () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    onCapture(imageSrc); // Pass captured image to parent
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center gap-4 p-4 bg-gray-100 rounded-lg shadow-md">
       <Webcam
         audio={false}
+        ref={webcamRef}
         screenshotFormat="image/jpeg"
-        onUserMediaError={(err) => console.error(err)}
-        onUserMedia={() => console.log('Webcam enabled')}
-        ref={(webcam) => {
-          if (webcam && !image) {
-            handleCapture(webcam); // Capture an image when webcam is ready
-          }
-        }}
+        className="rounded-lg border border-gray-300"
       />
-      {image && <EmotionDetector image={image} onDetect={onCapture} />}
+      <button
+        onClick={handleCapture}
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+      >
+        Capture Emotion
+      </button>
     </div>
   );
 }

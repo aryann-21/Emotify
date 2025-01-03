@@ -1,57 +1,36 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import CameraFeed from '../components/CameraFeed';
 import EmotionDetector from '../components/EmotionDetector';
-import { detectEmotion } from '../services/emotionService';  // Assume this is from your emotionService.js
+import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
   const [capturedImage, setCapturedImage] = useState(null);
   const [emotion, setEmotion] = useState(null);
   const navigate = useNavigate();
 
-  const handleCapture = async (image) => {
-    setCapturedImage(image); // Set the captured image
-    const detectedEmotion = await detectEmotion(image); // Detect emotion from the captured image
-    setEmotion(detectedEmotion); // Set the detected emotion
+  const handleCapture = (image) => {
+    setCapturedImage(image);
+  };
 
+  const handleEmotionDetected = (detectedEmotion) => {
+    setEmotion(detectedEmotion);
     if (detectedEmotion) {
-      // Navigate to the PlaylistPage with the detected emotion
-      navigate('/playlist', { state: { emotion: detectedEmotion } });
+      navigate('/playlists', { state: { emotion: detectedEmotion } });
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
-      <h1 className="text-4xl font-bold mb-8">Emotion-Based Playlist Curator</h1>
-
-      {/* Webcam Feed */}
-      <div className="mb-8">
-        <CameraFeed onCapture={handleCapture} />
-      </div>
-
-      {/* Emotion Detection */}
+    <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-2xl font-bold mb-6">Welcome to Emotion-Based Playlist Curator</h1>
+      <CameraFeed onCapture={handleCapture} />
       {capturedImage && (
-        <div className="mb-8">
-          <EmotionDetector image={capturedImage} onDetect={setEmotion} />
-        </div>
+        <EmotionDetector image={capturedImage} onDetect={handleEmotionDetected} />
       )}
-
-      {/* Display Captured Emotion */}
       {emotion && (
-        <div className="text-xl mt-4 mb-8">
-          <p>Detected Emotion: <span className="font-semibold">{emotion}</span></p>
-        </div>
+        <p className="mt-4 text-gray-700">
+          Detected Emotion: <span className="font-semibold">{emotion}</span>
+        </p>
       )}
-
-      {/* Capture Button */}
-      <div className="mt-4">
-        <button
-          onClick={() => handleCapture(capturedImage)}
-          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-md"
-        >
-          Capture Emotion
-        </button>
-      </div>
     </div>
   );
 }

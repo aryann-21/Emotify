@@ -1,15 +1,12 @@
-const fetchPlaylists = async (emotion) => {
+export const fetchPlaylists = async (emotion) => {
   try {
     const response = await fetch(`http://localhost:5000/api/playlists/${emotion}`);
     if (!response.ok) {
       throw new Error('Failed to fetch playlists');
     }
-    const playlists = await response.json();
-    return playlists;
+    return await response.json();
   } catch (error) {
-    console.error('Error fetching playlists:', error);
+    console.error(error);
     return [];
   }
 };
-
-export { fetchPlaylists };
