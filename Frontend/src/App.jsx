@@ -1,19 +1,20 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import HomePage from './pages/HomePage';
-import PlaylistPage from './pages/PlaylistPage';
+import React from "react";
+import WebcamCapture from "./components/WebcamCapture";
 
-function App() {
+const App = () => {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/playlists" element={<PlaylistPage />} />
-      </Routes>
-    </Router>
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+      <div className="container mx-auto p-4">
+        <h1 className="text-3xl font-bold text-center mb-4">
+          Emotion-Based Playlist Curator
+        </h1>
+        <p className="text-center mb-8">
+          Detect your emotions in real-time and get curated music recommendations.
+        </p>
+        <WebcamCapture />
+      </div>
+    </div>
   );
-}
+};
 
 export default App;
