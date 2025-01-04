@@ -10,6 +10,7 @@ const emotionPlaylists = {
   angry: 'rock',
   surprised: 'electronic',
   neutral: 'classical',
+  fear: 'ambient',
 };
 
 // Root route to test if the API is working
@@ -41,7 +42,7 @@ router.get('/:emotion', async (req, res) => {
   try {
     // Fetch playlists from Spotify
     const response = await axios.get(
-      `https://api.spotify.com/v1/search?q=genre:${genre}&type=playlist`,
+      `https://api.spotify.com/v1/search?q=genre:${genre}&type=playlist&limit=10`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -54,9 +55,11 @@ router.get('/:emotion', async (req, res) => {
     }
 
     // Send playlists as response
-    res.json(playlists);
+    res.json({ playlists });
   } catch (error) {
-    // Improved error logging
+    if (error.response?.status === 429) {
+      console.warn('Spotify API Rate Limit Hit:', error.response.headers['retry-after']);
+    }
     console.error('Spotify API Error:', error.response?.data || error.message);
     res.status(500).json({ error: 'Failed to fetch playlists from Spotify API' });
   }
