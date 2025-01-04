@@ -5,12 +5,12 @@ const router = express.Router();
 
 // Emotion to genre mapping
 const emotionPlaylists = {
-  happy: 'pop',
-  sad: 'acoustic',
-  angry: 'rock',
-  surprised: 'electronic',
-  neutral: 'classical',
-  fear: 'ambient',
+  happy: 'happy',
+  sad: 'sad',
+  angry: 'angry',
+  surprised: 'mixed',
+  neutral: 'party',
+  fear: 'calming',
 };
 
 // Root route to test if the API is working
