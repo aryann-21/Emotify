@@ -52,7 +52,7 @@ const WebcamCapture = () => {
 
   const fetchPlaylists = async (emotion) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/playlists/${emotion}`);
+      const response = await axios.get(`https://emotify-backend.onrender.com/api/playlists/${emotion}`);
       setPlaylists(response.data.playlists || []);
     } catch (error) {
       console.error("Error fetching playlists:", error.message);
