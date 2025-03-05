@@ -1,58 +1,66 @@
-const express = require('express');
-const { getAccessToken } = require('../spotifyAuth');
-const axios = require('axios');
-const router = express.Router();
+const express = require("express")
+const { getAccessToken } = require("../spotifyAuth")
+const axios = require("axios")
+const router = express.Router()
 
 const emotionPlaylists = {
-  happy: 'happy',
-  sad: 'sad',
-  angry: 'angry',
-  surprised: 'mixed',
-  neutral: 'party',
-  fear: 'calming',
-};
+  happy: "happy",
+  sad: "sad",
+  angry: "angry",
+  surprised: "mixed",
+  neutral: "party",
+  fear: "calming",
+}
 
-router.get('/', (req, res) => {
-  res.json({ message: 'Playlist API is working!' });
-});
+router.get("/", (req, res) => {
+  res.json({ message: "Playlist API is working!" })
+})
 
-router.get('/:emotion', async (req, res) => {
-  const emotion = req.params.emotion;
+router.get("/:emotion", async (req, res) => {
+  const emotion = req.params.emotion
 
-  const genre = emotionPlaylists[emotion];
+  const genre = emotionPlaylists[emotion]
   if (!genre) {
     return res.status(400).json({
-      error: `Invalid emotion: ${emotion}. Supported emotions are ${Object.keys(emotionPlaylists).join(', ')}`,
-    });
+      error: `Invalid emotion: ${emotion}. Supported emotions are ${Object.keys(emotionPlaylists).join(", ")}`,
+    })
   }
 
-  let token;
+  let token
   try {
-    token = await getAccessToken();
+    token = await getAccessToken()
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to fetch access token' });
+    return res.status(500).json({ error: "Failed to fetch access token" })
   }
 
   try {
+    let searchQuery = genre
+    if (emotion === "happy") {
+      searchQuery = "seedhe maut"
+    } else if (emotion === "neutral") {
+      searchQuery = "krsna"
+    }
+
     const response = await axios.get(
-      `https://api.spotify.com/v1/search?q=${genre}%20songs&type=playlist&limit=9`,
+      `https://api.spotify.com/v1/search?q=${searchQuery}%20songs&type=playlist&limit=20`,
       {
         headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+      },
+    )
 
-    const playlists = response.data?.playlists?.items;
+    const playlists = response.data?.playlists?.items
     if (!playlists || playlists.length === 0) {
-      return res.status(404).json({ error: `No playlists found for emotion: ${emotion}` });
+      return res.status(404).json({ error: `No playlists found for emotion: ${emotion}` })
     }
 
-    res.json({ playlists });
+    res.json({ playlists })
   } catch (error) {
     if (error.response?.status === 429) {
-      console.warn('Spotify API Rate Limit Hit:', error.response.headers['retry-after']);
+      console.warn("Spotify API Rate Limit Hit:", error.response.headers["retry-after"])
     }
-    res.status(500).json({ error: 'Failed to fetch playlists from Spotify API' });
+    res.status(500).json({ error: "Failed to fetch playlists from Spotify API" })
   }
-});
+})
 
-module.exports = router;
+module.exports = router
+
